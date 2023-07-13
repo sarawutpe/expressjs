@@ -13,10 +13,14 @@ app.use(cors({
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
+  res.send("ok")
+})
+
+app.get("/cookie", (req, res) => {
   console.log("req", req);
 
   console.log("token is", req.cookies.token);
-  res.send(req.cookies);
+  res.send(JSON.stringify(req.cookies));
 });
 
 app.listen(port, () => {

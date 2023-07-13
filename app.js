@@ -4,7 +4,12 @@ const cors = require('cors')
 const cookieParser = require("cookie-parser");
 
 const port = 3000;
-app.use(cors());
+
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
+
 app.use(cookieParser());
 
 app.get("/", (req, res) => {

@@ -3,10 +3,10 @@ const app = express();
 const cors = require('cors')
 const cookieParser = require("cookie-parser");
 
-const port = 3000;
+const port = 8080;
 
 app.use(cors({
-  origin: 'https://express-app-z4jd.onrender.com',
+  origin: true,
   credentials: true
 }));
 
@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   console.log("req", req);
 
   console.log("token is", req.cookies.token);
-  res.send("Hello World! v2");
+  res.send(req.cookies);
 });
 
 app.listen(port, () => {

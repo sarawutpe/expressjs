@@ -8,7 +8,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
-  console.log(req.headers);
+  console.log("req", req);
 
   console.log("token is", req.cookies.token);
   res.send("Hello World! v2");

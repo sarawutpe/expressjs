@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser')
 const port = 3000;
 
 app.use(cookieParser())
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   console.log(req.headers);

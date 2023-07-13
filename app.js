@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const port = 3000;
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://express-app-z4jd.onrender.com',
   credentials: true
 }));
 

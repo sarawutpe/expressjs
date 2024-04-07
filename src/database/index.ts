@@ -1,18 +1,15 @@
 import { connect, set } from 'mongoose';
-import { NODE_ENV, DB_HOST, DB_PORT, DB_DATABASE } from '@config';
+import { NODE_ENV, MONGODB_HOST, MONGODB_COLLECTION } from '@config';
 
-export const dbConnection = async () => {
+export const dbConnection = async (): Promise<void> => {
   const dbConfig = {
-    url: `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`,
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    },
+    url: `${MONGODB_HOST}/${MONGODB_COLLECTION}`,
   };
 
   if (NODE_ENV !== 'production') {
-    set('debug', true);
   }
 
-  await connect(dbConfig.url, dbConfig.options);
-}
+  set('debug', false);
+  set('strictQuery', true);
+  await connect(dbConfig.url);
+};

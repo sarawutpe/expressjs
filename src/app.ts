@@ -1,3 +1,4 @@
+import { cleanEnv, port, str } from 'envalid';
 import 'reflect-metadata';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -10,38 +11,42 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { dbConnection } from '@database';
-import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import { AuthRoute } from '@routes/auth.route';
+import { UserRoute } from '@routes/users.route';
+import { TestRoute } from './routes/test.route';
 
-export class App {
+class App {
   public app: express.Application;
   public env: string;
   public port: string | number;
 
-  constructor(routes: Routes[]) {
+  constructor() {
     this.app = express();
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
+    this.inittializeEnv();
     this.connectToDatabase();
     this.initializeMiddlewares();
-    this.initializeRoutes(routes);
+    this.initializeRoutes();
     this.initializeSwagger();
     this.initializeErrorHandling();
   }
 
   public listen() {
     this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
+      logger.info(`Express: v1.0.0 ENV: ${this.env}`);
       logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
     });
   }
 
-  public getServer() {
-    return this.app;
+  private inittializeEnv() {
+    cleanEnv(process.env, {
+      NODE_ENV: str(),
+      PORT: port(),
+    });
   }
 
   private async connectToDatabase() {
@@ -59,10 +64,11 @@ export class App {
     this.app.use(cookieParser());
   }
 
-  private initializeRoutes(routes: Routes[]) {
-    routes.forEach(route => {
-      this.app.use('/', route.router);
-    });
+  private initializeRoutes() {
+    this.app.use(new TestRoute().router);
+    this.app.use(new UserRoute().router);
+    this.app.use(new UserRoute().router);
+    this.app.use(new AuthRoute().router);
   }
 
   private initializeSwagger() {
@@ -85,3 +91,5 @@ export class App {
     this.app.use(ErrorMiddleware);
   }
 }
+
+new App().listen();
